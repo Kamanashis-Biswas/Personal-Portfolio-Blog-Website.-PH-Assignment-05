@@ -1,0 +1,138 @@
+import Link from "next/link";
+import Image from "next/image";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Github, ExternalLink } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Project } from "@/type/projectTypes";
+
+interface ProjectsProps {
+  projects: Project[];
+}
+
+export function Projects({ projects }: ProjectsProps) {
+  return (
+    <section className="py-12 bg-gray-50 dark:bg-gray-900">
+      <div className="relative bg-blue-600 dark:bg-blue-900 text-white dark:text-gray-200 py-20 mb-8">
+        <div className="container mx-auto text-center">
+          <h2 className="text-4xl font-bold uppercase">Best Projects</h2>
+        </div>
+      </div>
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projects?.map((project) => (
+            <Card
+              key={project._id}
+              className="flex flex-col overflow-hidden border-2 border-gray-200 dark:border-gray-700 hover:border-[#f9004d] dark:hover:border-[#ff3366] transition-colors duration-300"
+            >
+              <CardHeader className="p-0 overflow-hidden">
+                <div className="relative h-48 overflow-hidden group">
+                  <Image
+                    src={project.images[0] || "/placeholder.svg"}
+                    alt={project.title}
+                    width={400}
+                    height={600}
+                    className="object-cover w-full h-[200%] transition-transform duration-[4s] ease-in-out group-hover:translate-y-[-50%]"
+                  />
+                </div>
+              </CardHeader>
+              <CardContent className="flex-grow p-4">
+                <CardTitle className="mb-2 text-gray-800 dark:text-gray-100">
+                  {project.title}
+                </CardTitle>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {project.technologies.slice(0, 3).map((tech, index) => (
+                    <Badge
+                      key={index}
+                      variant="secondary"
+                      className="bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200"
+                    >
+                      {tech}
+                    </Badge>
+                  ))}
+                  {project.technologies.length > 3 && (
+                    <Badge
+                      variant="secondary"
+                      className="bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200"
+                    >
+                      +{project.technologies.length - 3}
+                    </Badge>
+                  )}
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-between items-center p-4 bg-gray-100 dark:bg-gray-800">
+                <div className="flex space-x-2">
+                  {project?.server && (
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="text-gray-600 cursor-pointer dark:text-gray-300 hover:text-[#f9004d] dark:hover:text-[#ff3366]"
+                    >
+                      <Link
+                        href={project.server}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Github className="h-4 w-4" />
+                        <span className="sr-only">Server GitHub</span>
+                      </Link>
+                    </Button>
+                  )}
+                  {project?.frontend && (
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="text-gray-600 dark:text-gray-300 hover:text-[#f9004d] dark:hover:text-[#ff3366]"
+                    >
+                      <Link
+                        href={project.frontend}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Github className="h-4 w-4" />
+                        <span className="sr-only">Frontend GitHub</span>
+                      </Link>
+                    </Button>
+                  )}
+                  {project?.live && (
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="text-gray-600 dark:text-gray-300 hover:text-[#f9004d] dark:hover:text-[#ff3366]"
+                    >
+                      <Link
+                        href={project.live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        <span className="sr-only">Live Project</span>
+                      </Link>
+                    </Button>
+                  )}
+                </div>
+                <Button
+                  variant="default"
+                  asChild
+                  className={cn(
+                    "bg-[#f9004d] hover:bg-[#d0003f] text-white",
+                    "dark:bg-[#ff3366] dark:hover:bg-[#e62e5c] dark:text-white"
+                  )}
+                >
+                  <Link href={`/projects/${project._id}`}>View Details</Link>
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
